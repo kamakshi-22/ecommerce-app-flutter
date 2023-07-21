@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/utils/constants.dart';
 import 'package:ecommerce_app/utils/textstyles.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,62 @@ class Body extends StatelessWidget {
             style: AppTextStyles.displayMedium,
           ),
         ),
-        Categories()
+        Categories(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+            child: GridView.builder(
+                itemCount: products.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.75,
+                    mainAxisSpacing: kDefaultPaddin,
+                    crossAxisSpacing: kDefaultPaddin),
+                itemBuilder: (context, index) {
+                  return ItemCard(
+                    product: products[index],
+                  );
+                }),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class ItemCard extends StatelessWidget {
+  final Product? product;
+  final Function? press;
+  const ItemCard({
+    super.key,
+    this.product,
+    this.press,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(kDefaultPaddin),
+            decoration: BoxDecoration(
+                color: product!.color, borderRadius: BorderRadius.circular(16)),
+            child: Image.asset(product!.image),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+          child: Text(
+            product!.title,
+            style: AppTextStyles.bodyMedium,
+          ),
+        ),
+        Text(
+          "\$${product!.price}",
+          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
