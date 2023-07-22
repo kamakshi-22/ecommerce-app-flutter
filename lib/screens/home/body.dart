@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/models/Product.dart';
+import 'package:ecommerce_app/screens/details/details_secreen.dart';
 import 'package:ecommerce_app/utils/constants.dart';
 import 'package:ecommerce_app/utils/textstyles.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,13 @@ class Body extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return ItemCard(
                     product: products[index],
+                    press: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return DetailsScreen(product: products[index]);
+                        },
+                      ));
+                    },
                   );
                 }),
           ),
@@ -42,39 +50,45 @@ class Body extends StatelessWidget {
 }
 
 class ItemCard extends StatelessWidget {
-  final Product? product;
-  final Function? press;
+  final Product product;
+  final Function() press;
   const ItemCard({
     super.key,
-    this.product,
-    this.press,
+    required this.product,
+    required this.press,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(kDefaultPaddin),
-            decoration: BoxDecoration(
-                color: product!.color, borderRadius: BorderRadius.circular(16)),
-            child: Image.asset(product!.image),
+    return GestureDetector(
+      onTap: press,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(kDefaultPaddin),
+              decoration: BoxDecoration(
+                  color: product.color,
+                  borderRadius: BorderRadius.circular(16)),
+              child:
+                  Hero(tag: "${product.id}", child: Image.asset(product.image)),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
-          child: Text(
-            product!.title,
-            style: AppTextStyles.bodyMedium,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+            child: Text(
+              product.title,
+              style: AppTextStyles.bodyMedium,
+            ),
           ),
-        ),
-        Text(
-          "\$${product!.price}",
-          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ],
+          Text(
+            "\$${product.price}",
+            style:
+                AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 }
